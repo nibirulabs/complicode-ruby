@@ -50,7 +50,7 @@ module Complicode
 
     def data_string
       tmp_key = @key.dup
-      partial_strings = string_lenghts.map { |i| tmp_key.slice!(0...i) }
+      partial_strings = string_lengths.map { |i| tmp_key.slice!(0...i) }
 
       @authorization_code += partial_strings[0]
       @number += partial_strings[1]
@@ -73,7 +73,7 @@ module Complicode
       index = -1
       @ascii_partial_sums.inject(0) do |sum, partial_sum|
         index += 1
-        sum + @ascii_total_sum * partial_sum / string_lenghts[index]
+        sum + @ascii_total_sum * partial_sum / string_lengths[index]
       end.b(10).to_s(BASE64)
     end
 
@@ -102,8 +102,8 @@ module Complicode
       end
     end
 
-    def string_lenghts
-      @string_lenghts ||= verification_digits.split('').map { |d| d.to_i + 1 }
+    def string_lengths
+      @string_lengths ||= verification_digits.split('').map { |d| d.to_i + 1 }
     end
   end
 end
