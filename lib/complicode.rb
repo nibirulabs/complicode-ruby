@@ -35,7 +35,7 @@ module Complicode
 
       @encrypted_data = encrypt(data_string)
 
-      generate_ascii_sumatories
+      generate_ascii_sums
 
       @base64_data = fetch_base64_data
 
@@ -92,7 +92,7 @@ module Complicode
       sum.to_s[-VERIFICATION_DIGITS_LENGTH..-1]
     end
 
-    def generate_ascii_sumatories
+    def generate_ascii_sums
       @ascii_partial_sums = Array.new(VERIFICATION_DIGITS_LENGTH, 0)
       @ascii_total_sum = 0
 
