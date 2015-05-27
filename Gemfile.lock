@@ -50,6 +50,7 @@ GEM
     rspec-support (3.2.1)
     ruby-rc4 (0.1.5)
     slop (3.6.0)
+    smarter_csv (1.0.19)
     thread_safe (0.3.5)
     verhoeff (2.1.0)
     virtus (1.0.5)
@@ -68,3 +69,4 @@ DEPENDENCIES
   pry-byebug (~> 3.1)
   rake (~> 10.4)
   rspec (~> 3.2)
+  smarter_csv (~> 1.0)

@@ -1,7 +1,8 @@
 require 'complicode/version'
-require 'verhoeff'
-require 'rc4'
+
 require 'radix'
+require 'rc4'
+require 'verhoeff'
 require 'virtus'
 
 module Complicode
@@ -19,15 +20,20 @@ module Complicode
     attribute :authorization_code, String
     attribute :issue_date, String
     attribute :key, String
-    attribute :nit_code, String
-    attribute :number, String
-
-    attribute :base64_data, String, writer: :private
-    attribute :encrypted_data, String, writer: :private
-    attribute :verification_digits, String, writer: :private
+    attribute :nit, String, default: 0, required: false
+    attribute :invoice_number, String
 
     def self.call(*args)
       new(*args).call
+    end
+
+    def self.required_attrs
+      attribute_set.select(&:required?).map(&:name)
+    end
+
+    def initialize(*args)
+      super
+      validate_attributes
     end
 
     def call
@@ -45,7 +51,7 @@ module Complicode
     private
 
     def control_code
-      encrypt(base64_data).scan(/.{2}/).join('-')
+      encrypt(@base64_data).scan(/.{2}/).join('-')
     end
 
     def data_string
@@ -53,12 +59,12 @@ module Complicode
       partial_strings = string_lengths.map { |i| tmp_key.slice!(0...i) }
 
       @authorization_code += partial_strings[0]
-      @number += partial_strings[1]
-      @nit_code += partial_strings[2]
+      @invoice_number += partial_strings[1]
+      @nit += partial_strings[2]
       @issue_date += partial_strings[3]
       @amount += partial_strings[4]
 
-      [authorization_code, number, nit_code, issue_date, amount].inject(:+)
+      [authorization_code, invoice_number, nit, issue_date, amount].inject(:+)
     end
 
     def encrypt(data)
@@ -66,7 +72,7 @@ module Complicode
     end
 
     def encryption_key
-      @encryption_key ||= key + verification_digits
+      @encryption_key ||= key + @verification_digits
     end
 
     def fetch_base64_data
@@ -79,13 +85,13 @@ module Complicode
 
     def fetch_verification_digits
       2.times do
-        @number     = Verhoeff.checksum_of(@number).to_s
-        @nit_code   = Verhoeff.checksum_of(@nit_code).to_s
-        @issue_date = Verhoeff.checksum_of(@issue_date).to_s
-        @amount     = Verhoeff.checksum_of(@amount).to_s
+        @invoice_number += Verhoeff.checksum_digit_of(@invoice_number).to_s
+        @nit            += Verhoeff.checksum_digit_of(@nit).to_s
+        @issue_date     += Verhoeff.checksum_digit_of(@issue_date).to_s
+        @amount         += Verhoeff.checksum_digit_of(@amount).to_s
       end
 
-      sum = [number, nit_code, issue_date, amount].map(&:to_i).inject(:+)
+      sum = [invoice_number, nit, issue_date, amount].map(&:to_i).inject(:+)
 
       VERIFICATION_DIGITS_LENGTH.times { sum = Verhoeff.checksum_of(sum) }
 
@@ -96,14 +102,30 @@ module Complicode
       @ascii_partial_sums = Array.new(VERIFICATION_DIGITS_LENGTH, 0)
       @ascii_total_sum = 0
 
-      encrypted_data.each_byte.with_index do |byte, index|
+      @encrypted_data.each_byte.with_index do |byte, index|
         @ascii_total_sum += byte
         @ascii_partial_sums[index % VERIFICATION_DIGITS_LENGTH] += byte
       end
     end
 
+    def missing_attrs
+      @missing_attrs ||= Generate.required_attrs - valid_attribute_names
+    end
+
+    def missing_attrs_error
+      "Missing attributes: #{missing_attrs.join(',')}"
+    end
+
     def string_lengths
-      @string_lengths ||= verification_digits.split('').map { |d| d.to_i + 1 }
+      @string_lengths ||= @verification_digits.split('').map { |d| d.to_i + 1 }
+    end
+
+    def validate_attributes
+      raise ArgumentError, missing_attrs_error unless missing_attrs.empty?
+    end
+
+    def valid_attribute_names
+      @valid_attribute_names ||= attributes.reject { |_, v| v.nil? }.keys
     end
   end
 end
