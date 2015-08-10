@@ -6,8 +6,8 @@ require 'complicode/version'
 Gem::Specification.new do |spec|
   spec.name          = 'complicode'
   spec.version       = Complicode::VERSION
-  spec.authors       = ['Sergio Tapia', 'Pablo Crivella']
-  spec.email         = ['sergiotapia@outlook.com', 'pablocrivella@gmail.com']
+  spec.authors       = ['Pablo Crivella']
+  spec.email         = ['pablocrivella@gmail.com']
   spec.summary       = 'Complicode! A needlessly complicated code generator!'
   spec.description   = %q(Generador de codigo de control para facturas dentro del Servicio Nacional de Impuestos de Bolivia.)
   spec.homepage      = 'https://github.com/mobilebits-bolivia/complicode-ruby'
