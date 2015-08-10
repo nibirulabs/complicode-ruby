@@ -121,7 +121,7 @@ module Complicode
     end
 
     def validate_attributes
-      raise ArgumentError, missing_attrs_error unless missing_attrs.empty?
+      fail ArgumentError, missing_attrs_error unless missing_attrs.empty?
     end
 
     def valid_attribute_names
