@@ -30,7 +30,7 @@ describe Complicode::Generate do
           invoice_number: row[:invoice_number],
           nit: row[:nit],
           issue_date: row[:issue_date].delete('/'),
-          amount: row[:amount].to_s.gsub(',', '.').to_f.round,
+          amount: row[:amount].to_s.tr(',', '.').to_f.round,
           key: row[:key]
         }
 
