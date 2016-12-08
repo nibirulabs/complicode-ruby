@@ -3,7 +3,6 @@ require 'complicode/version'
 require 'radix'
 require 'rc4'
 require 'verhoeff'
-require 'virtus'
 
 module Complicode
   class Generate
