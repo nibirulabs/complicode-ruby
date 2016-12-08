@@ -78,9 +78,7 @@ module Complicode
     end
 
     def generate_base64_data(ascii_sums)
-      index = -1
-      ascii_sums.partials.inject(0) do |sum, partial_sum|
-        index += 1
+      ascii_sums.partials.each_with_index.inject(0) do |sum, (partial_sum, index)|
         sum + ascii_sums.total * partial_sum / string_lengths[index]
       end.b(10).to_s(BASE64)
     end
@@ -88,14 +86,12 @@ module Complicode
     AsciiSums = Struct.new(:total, :partials)
 
     def generate_ascii_sums(encrypted_data)
-      sums = AsciiSums.new(0, Array.new(VERIFICATION_DIGITS_LENGTH, 0))
-
-      encrypted_data.each_byte.with_index do |byte, index|
-        sums.total += byte
-        sums.partials[index % VERIFICATION_DIGITS_LENGTH] += byte
+      AsciiSums.new(0, Array.new(VERIFICATION_DIGITS_LENGTH, 0)).tap do |sums|
+        encrypted_data.each_byte.with_index do |byte, index|
+          sums.total += byte
+          sums.partials[index % VERIFICATION_DIGITS_LENGTH] += byte
+        end
       end
-
-      sums
     end
 
     def string_lengths
