@@ -38,28 +38,5 @@ describe Complicode::Generate do
         expect(output).to eq row[:control_code]
       end
     end
-
-    it 'raises an ArgumentError exception' do
-      input = {
-        authorization_code: nil,
-        invoice_number: nil,
-        nit: nit,
-        key: key
-      }
-
-      expect { Complicode::Generate.call(input) }.to raise_error(ArgumentError)
-    end
-
-    it 'does not raise an ArgumentError exception' do
-      input = {
-        authorization_code: authorization_code,
-        invoice_number: invoice_number,
-        issue_date: issue_date,
-        amount: amount,
-        key: key
-      }
-
-      expect { Complicode::Generate.call(input) }.not_to raise_error
-    end
   end
 end
