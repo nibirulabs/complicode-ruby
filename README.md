@@ -1,6 +1,6 @@
 # Complicode
 
-Generador de codigo de control para facturas dentro del Servicio Nacional de Impuestos de Bolivia.
+Control code generator for invoices inside the Bolivian national tax service.
 
 ### Usage
 
