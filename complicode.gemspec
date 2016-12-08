@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Pablo Crivella']
   spec.email         = ['pablocrivella@gmail.com']
   spec.summary       = 'Complicode! A needlessly complicated code generator!'
-  spec.description   = %q(Generador de codigo de control para facturas dentro del Servicio Nacional de Impuestos de Bolivia.)
-  spec.homepage      = 'https://github.com/mobilebits-bolivia/complicode-ruby'
+  spec.description   = 'Control code generator for invoices inside the Bolivian national tax service.'
+  spec.homepage      = 'https://github.com/mobile-bits/complicode-ruby'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
