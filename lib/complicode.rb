@@ -23,7 +23,7 @@ module Complicode
       @authorization_code = authorization_code.to_s
       @key = key.to_s
       @nit = nit.to_s
-      @amount = amount.to_s
+      @amount = amount.to_d.round.to_s
       @issue_date = issue_date.to_s
       @invoice_number = invoice_number.to_s
     end
